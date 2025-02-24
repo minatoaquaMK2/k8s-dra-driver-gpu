@@ -162,6 +162,13 @@ func (l deviceLib) enumerateGpusAndMigDevices(config *Config) (AllocatableDevice
 				return fmt.Errorf("error getting MIG devices for GPU %d: %w", i, err)
 			}
 
+			if gpuInfo.migEnabled {
+				klog.Infof("GPU %d (%s) MIG is enabled, current layout:", i, gpuInfo.UUID)
+				for _, migDeviceInfo := range migs {
+					klog.Infof("  MIG Device UUID: %s, Profile: %s", migDeviceInfo.UUID, migDeviceInfo.profile)
+				}
+			}
+
 			for _, migDeviceInfo := range migs {
 				deviceInfo := &AllocatableDevice{
 					Mig: migDeviceInfo,
